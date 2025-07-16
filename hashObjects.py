@@ -1,4 +1,6 @@
 import zlib
+import hashlib
+
 def readBlob(fileHash):
     fileLoc = f".git/objects/{fileHash[:2]}/{fileHash[2:]}"
 
@@ -13,3 +15,12 @@ def readBlob(fileHash):
         fileSplit = fileData.split(b"\0")
         fileContent = fileSplit[1]
         print(fileContent.decode("utf-8"), end="")
+
+def writeBlob(fileToHash):
+
+    with open(fileToHash, "rb") as f:
+        fileBin = f.read()
+        zippedFile = f"blob {len(fileBin)}\x00".encode("utf-8")
+        zippedFile += fileBin
+        hash = hashlib.sha1(zippedFile).hexdigest()
+        print(hash)
