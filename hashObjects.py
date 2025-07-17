@@ -1,6 +1,6 @@
 import zlib
 import hashlib
-
+import os
 def readBlob(fileHash):
     fileLoc = f".git/objects/{fileHash[:2]}/{fileHash[2:]}"
 
@@ -24,3 +24,8 @@ def writeBlob(fileToHash):
         zippedFile += fileBin
         hash = hashlib.sha1(zippedFile).hexdigest()
         print(hash)
+        filePath = os.path.join(".git/objects", hash[:2])
+        os.makedirs(filePath)
+        filePath = os.path.join(filePath, hash[2:])
+        with open(filePath, "wb") as compressedFile:
+            compressedFile.write(zlib.compress(zippedFile))
