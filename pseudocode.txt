@@ -10,20 +10,7 @@ def readTree(fileHash):
         _, treeData = decompressedData.split(b"\0", maxsplit = 1)
         
         while treeData:
-            
-            _, name = treeData.split()
+            modeName, shaData = decompressedData.split(b"\0", maxsplit = 1)
+            _, name = modeName.split()
             print(name.decode("utf-8"))
-            treeData = treeData[20:]
-
-error message:
-    Traceback (most recent call last):
-remote: [your_program]   File "<frozen runpy>", line 198, in _run_module_as_main
-remote: [your_program]   File "<frozen runpy>", line 88, in _run_code
-remote: [your_program]   File "/app/app/main.py", line 31, in <module>
-remote: [your_program]     main()
-remote: [your_program]   File "/app/app/main.py", line 24, in main
-remote: [your_program]     trees.readTree(commandList[3])
-remote: [your_program]   File "/app/trees.py", line 14, in readTree
-remote: [your_program]     _, name = treeData.split()
-remote: [your_program]     ^^^^^^^
-remote: [your_program] ValueError: too many values to unpack (expected 2)
+            treeData = shaData[20:]
