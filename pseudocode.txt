@@ -1,38 +1,29 @@
-import sys
 import zlib
 
-class treeUtils:
+def readTree(fileHash):
     
-    def readTree(fileHash):
+    fileLoc = f".git/objects/{fileHash[:2]}/{fileHash[2:]}"
+    
+    with open(fileLoc, "rb") as f:
         
-        fileLoc = f".git/objects/{fileHash[:2]}/{fileHash[2:]}"
+        decompressedData = zlib.decompress(f.read())
+        _, treeData = decompressedData.split(b"\0", maxsplit = 1)
         
-        with open(fileLoc, "rb") as f:
+        while treeData:
             
-            decompressedData = zlib.decompress(f.read())
-            _, treeData = decompressedData.split(b"\0")
-            
-            while treeData:
-                
-                _, name = treeData.split()
-                print(name.decode("utf-8"))
-                treeData = treeData[20:]
+            _, name = treeData.split()
+            print(name.decode("utf-8"))
+            treeData = treeData[20:]
 
-def main():
-    try:
-        commandList = []
-        for cmd in sys.argv:
-            commandList.append(cmd)
-        if commandList[1] == "init":
-            gitInit.createGitRepos()
-        elif (commandList[1] == "cat-file") and (commandList[2] == "-p"):
-            hashObjects.readBlob(commandList[3])
-        elif (commandList[1] == "ls-tree") and (commandList[2] == "--name-only"):
-            treeUtils.readTree(commandList[3])
-        else:
-            raise RuntimeError(f"Unknown git command")
-    except IndexError: 
-        print("No git cmd line argument found", file=sys.stderr)
-
-if __name__ == "__main__":
-    main()
+error message:
+    Traceback (most recent call last):
+remote: [your_program]   File "<frozen runpy>", line 198, in _run_module_as_main
+remote: [your_program]   File "<frozen runpy>", line 88, in _run_code
+remote: [your_program]   File "/app/app/main.py", line 31, in <module>
+remote: [your_program]     main()
+remote: [your_program]   File "/app/app/main.py", line 24, in main
+remote: [your_program]     trees.readTree(commandList[3])
+remote: [your_program]   File "/app/trees.py", line 14, in readTree
+remote: [your_program]     _, name = treeData.split()
+remote: [your_program]     ^^^^^^^
+remote: [your_program] ValueError: too many values to unpack (expected 2)
